@@ -25,6 +25,8 @@ EXPORT_OPTIONS_FILE="Support/ExportOptions.plist"
 
 rm -rf "${RESULT_BUNDLE_PATH}"
 
+
+
 xcrun xcodebuild \
     -workspace "${WORKSPACE}" \
     -scheme "${SCHEME}" \
@@ -36,6 +38,7 @@ xcrun xcodebuild \
     -derivedDataPath "${DERIVED_DATA_PATH}" \
     -archivePath "${ARCHIVE_PATH}" \
     -resultBundlePath "${RESULT_BUNDLE_PATH}" \
+    -destination "generic/platform=iOS" \
     CURRENT_PROJECT_VERSION="${CURRENT_PROJECT_VERSION}" \
     archive
 
