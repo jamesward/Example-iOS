@@ -68,6 +68,8 @@ jobs:
         EOF
 
     - run: ./Build
+      env:
+        DEVELOPMENT_TEAM: ${{ secrets.APPSTORE_TEAM_ID }}
 
     - uses: Apple-Actions/upload-testflight-build@v1
       with:
