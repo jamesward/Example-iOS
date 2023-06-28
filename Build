@@ -39,6 +39,7 @@ xcrun xcodebuild \
     -destination "generic/platform=iOS" \
     CURRENT_PROJECT_VERSION="${CURRENT_PROJECT_VERSION}" \
     DEVELOPMENT_TEAM="${DEVELOPMENT_TEAM}" \
+    PROVISIONING_PROFILE="build_pp"
     archive
 
 xcrun xcodebuild \
