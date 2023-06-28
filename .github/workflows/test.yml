@@ -47,6 +47,11 @@ jobs:
         <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
         <plist version="1.0">
           <dict>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>${{ secrets.BUNDLE_ID }}</key>
+              <string>build_pp</string>
+            </dict>
             <key>destination</key>
             <string>export</string>
             <key>method</key>
