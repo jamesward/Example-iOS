@@ -49,7 +49,6 @@ xcrun xcodebuild \
     -exportOptionsPlist "${EXPORT_OPTIONS_FILE}" \
     -archivePath "${ARCHIVE_PATH}" \
     -exportPath "${ARTIFACT_PATH}/${SCHEME}.ipa" \
-    -exportArchive \
     -exportProvisioningProfile "${PROVISIONING_PROFILE_SPECIFIER}"
 
 # Zip up the Xcode Archive into Artifacts folder.
