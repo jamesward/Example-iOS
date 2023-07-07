@@ -10,33 +10,39 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: "Setup Signing"
-      env:
-        BUILD_CERTIFICATE_BASE64: ${{ secrets.CERTIFICATES_FILE_BASE64 }}
-        P12_PASSWORD: ${{ secrets.CERTIFICATES_PASSWORD }}
-        BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
-        KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
       run: |
-        # create variables
-        CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
-        PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
         KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
         
+        DEV_CERTIFICATE_PATH=$RUNNER_TEMP/development.p12
+        DEV_PROFILE=$RUNNER_TEMP/development.mobileprovision
+        
+        DIST_CERTIFICATE_PATH=$RUNNER_TEMP/distribution.p12
+        DIST_PROFILE=$RUNNER_TEMP/distribution.mobileprovision
+        
+        
         # import certificate and provisioning profile from secrets
-        echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
-        echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+        echo -n "${{ secrets.DEV_CERTIFICATES_FILE_BASE64 }}" | base64 --decode -o $DEV_CERTIFICATE_PATH
+        echo -n "${{ secrets.DEV_PROVISIONING_PROFILE_BASE64 }}" | base64 --decode -o $DEV_PROFILE
+        
+        echo -n "${{ secrets.DIST_CERTIFICATES_FILE_BASE64 }}" | base64 --decode -o $DIST_CERTIFICATE_PATH
+        echo -n "${{ secrets.DIST_PROVISIONING_PROFILE_BASE64 }}" | base64 --decode -o $DIST_PROFILE
+        
         
         # create temporary keychain
-        security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+        security create-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" $KEYCHAIN_PATH
         security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-        security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+        security unlock-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" $KEYCHAIN_PATH
         
-        # import certificate to keychain
-        security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-        security list-keychain -d user -s $KEYCHAIN_PATH
+        
+        # import certificates to keychain
+        security import $DEV_CERTIFICATE_PATH -P "${{ secrets.DEV_CERTIFICATES_PASSWORD }}" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+        security import $DIST_CERTIFICATE_PATH -P "${{ secrets.DIST_CERTIFICATES_PASSWORD }}" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+        
         
         # apply provisioning profile
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-        cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+        cp $DEV_CERTIFICATE_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+        cp $DIST_CERTIFICATE_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
     - name: "Generate ExportOptions.plist"
       run: |
@@ -64,7 +70,7 @@ jobs:
             <key>provisioningProfiles</key>
             <dict>
               <key>${{ secrets.BUNDLE_ID }}</key>
-              <string>${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}</string>
+              <string>${{ secrets.DIST_PROVISIONING_PROFILE_NAME }}</string>
             </dict>
           </dict>
         </plist>
@@ -74,7 +80,7 @@ jobs:
       env:
         DEVELOPMENT_TEAM: ${{ secrets.APPSTORE_TEAM_ID }}
         BUNDLE_ID: ${{ secrets.BUNDLE_ID }}
-        PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
+        PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.DEV_PROVISIONING_PROFILE_NAME }}
 
     - uses: Apple-Actions/upload-testflight-build@v1
       with:
