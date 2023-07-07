@@ -96,7 +96,8 @@ jobs:
           -exportArchive \
           -exportOptionsPlist "${RUNNER_TEMP}/Build/ExportOptions.plist" \
           -archivePath "${RUNNER_TEMP}/Build/Archives/${SCHEME}.xcarchive" \
-          -exportPath "${RUNNER_TEMP}/Build/Archives/${SCHEME}.xcarchive/${SCHEME}.ipa"
+          -exportPath "${RUNNER_TEMP}/Build/Archives/${SCHEME}.xcarchive/${SCHEME}.ipa" \
+          PRODUCT_BUNDLE_IDENTIFIER="${{ secrets.BUNDLE_ID }}"
         
         echo "ipa_path=${RUNNER_TEMP}/Build/Archives/${SCHEME}.xcarchive/${SCHEME}.ipa" >> $GITHUB_OUTPUT
 
