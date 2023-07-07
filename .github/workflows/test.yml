@@ -30,7 +30,7 @@ jobs:
           CONFIGURATION: Release
           SDK: iphoneos
       run: |
-        cd ${WORKSPACE}
+        cd $WORKSPACE
         if [ "${{ github.ref_type }}" = "tag" ]; then
           agvtool new-marketing-version ${GITHUB_REF_NAME#v}
         fi
