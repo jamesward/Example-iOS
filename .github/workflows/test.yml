@@ -15,26 +15,13 @@ jobs:
         p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
         p12-password: ${{ secrets.CERTIFICATES_PASSWORD }}
 
-    - name: "Setup Signing"
-      # These are env vars so they get referenced instead of included
-      env:
-        DEV_PROVISIONING_PROFILE_BASE64: ${{ secrets.DEV_PROVISIONING_PROFILE_BASE64 }}
-        DIST_PROVISIONING_PROFILE_BASE64: ${{ secrets.DIST_PROVISIONING_PROFILE_BASE64 }}
-      run: |
-        KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-        DEV_PROFILE=$RUNNER_TEMP/development.mobileprovision
-        DIST_PROFILE=$RUNNER_TEMP/distribution.mobileprovision
-        
-        
-        # import provisioning profiles from secrets
-        echo -n "$DEV_PROVISIONING_PROFILE_BASE64" | base64 --decode -o $DEV_PROFILE
-        echo -n "$DIST_PROVISIONING_PROFILE_BASE64" | base64 --decode -o $DIST_PROFILE
-        
-        
-        # apply provisioning profile
-        mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-        cp $DEV_PROFILE ~/Library/MobileDevice/Provisioning\ Profiles
-        cp $DIST_PROFILE ~/Library/MobileDevice/Provisioning\ Profiles
+    - name: download provisioning profiles
+      uses: apple-actions/download-provisioning-profiles@v1
+      with:
+        bundle-id: ${{ secrets.BUNDLE_ID }}
+        issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+        api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
+        api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
 
     - name: "Generate ExportOptions.plist"
       run: |
