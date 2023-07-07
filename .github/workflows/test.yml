@@ -61,6 +61,11 @@ jobs:
             <string>${{ secrets.APPSTORE_TEAM_ID }}</string>
             <key>uploadSymbols</key>
             <true/>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>${{ secrets.BUNDLE_ID }}</key>
+              <string>${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}</string>
+            </dict>
           </dict>
         </plist>
         EOF
