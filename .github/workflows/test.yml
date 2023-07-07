@@ -32,10 +32,10 @@ jobs:
       run: |
         cd Example-iOS
         if [ "${{ github.ref_type }}" = "tag" ]; then
-          agvtool new-marketing-version ${GITHUB_REF_NAME#v} -workspace "${WORKSPACE}"
+          agvtool new-marketing-version ${GITHUB_REF_NAME#v}
         fi
           
-        xcrun agvtool new-version -all ${GITHUB_RUN_NUMBER} -workspace "${WORKSPACE}"
+        xcrun agvtool new-version -all ${GITHUB_RUN_NUMBER}
         cd ..
         
         xcrun xcodebuild \
