@@ -71,6 +71,7 @@ jobs:
       env:
         DEVELOPMENT_TEAM: ${{ secrets.APPSTORE_TEAM_ID }}
         BUNDLE_ID: ${{ secrets.BUNDLE_ID }}
+        PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
 
     - uses: Apple-Actions/upload-testflight-build@v1
       with:

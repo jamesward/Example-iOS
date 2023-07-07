@@ -18,15 +18,20 @@ An example of how to use Apple development GitHub Actions
     export NAME="YOUR_NAME"
     openssl req -new -key mykey.key -out CertificateSigningRequest.certSigningRequest -subj "/emailAddress=$EMAIL, CN=$NAME, C=US"
     ```
-1. Add a new Certificate of *iOS App Development* https://developer.apple.com/account/resources/certificates/add
+1. Add a new Certificate of *Apple Development* https://developer.apple.com/account/resources/certificates/add
 1. Upload the `CertificateSigningRequest.certSigningRequest`
 1. Download the certificate
 1. Convert the cert to PEM format:
-    `openssl x509 -in ios_development.cer -inform DER -out dev.pem -outform PEM`
+    `openssl x509 -in development.cer -inform DER -out development.pem -outform PEM`
 1. Export the p12 remembering the password:
-    `openssl pkcs12 -export -legacy -inkey mykey.key -in dev.pem -out dev.p12`
+    `openssl pkcs12 -export -legacy -inkey mykey.key -in development.pem -out development.p12`
 1. Store the certificate password in GitHub Secret: `CERTIFICATES_PASSWORD`
 1. Convert the certificate to Base64:
-    `base64 dev.p12 > dev.p12.txt`
+    `base64 development.p12 > development.p12.txt`
 1. Store the Base64 certificate in GitHub Secret: `CERTIFICATES_FILE_BASE64`
 1. Create `iOS App Development` Provisioning Profile: https://developer.apple.com/account/resources/profiles/add
+1. Store the name of the provisioning profile in GitHub Secret: `PROVISIONING_PROFILE_SPECIFIER`
+2. Download the provisioning profile
+1. Convert the provisioning profile to Base64:
+    `base64 YOUR_PROFILE.mobileprovision > YOUR_PROFILE.mobileprovision.txt`
+1. Store the Base64 provisioning profile in GitHub Secret: `BUILD_PROVISION_PROFILE_BASE64`
