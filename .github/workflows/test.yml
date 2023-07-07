@@ -87,7 +87,8 @@ jobs:
         </plist>
         EOF
 
-    - name: export archive
+    - id: export_archive
+      name: export archive
       env:
         SCHEME: Example-iOS
       run: |
@@ -96,12 +97,12 @@ jobs:
           -exportOptionsPlist "${RUNNER_TEMP}/Build/ExportOptions.plist" \
           -archivePath "${RUNNER_TEMP}/Build/Archives/${SCHEME}.xcarchive" \
           -exportPath "${RUNNER_TEMP}/Build/Archives/${SCHEME}.xcarchive/${SCHEME}.ipa"
+        
+        echo "ipa_path=${RUNNER_TEMP}/Build/Archives/${SCHEME}.xcarchive/${SCHEME}.ipa" >> $GITHUB_OUTPUT
 
     - uses: Apple-Actions/upload-testflight-build@v1
-      env:
-        SCHEME: Example-iOS
       with:
-        app-path: ${{ vars.RUNNER_TEMP }}/Build/Archives/${{ env.SCHEME }}.xcarchive/${{ env.SCHEME }}.ipa
+        app-path: ${{ steps.export_archive.outputs.ipa_path }}
         issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
         api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
         api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
