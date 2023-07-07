@@ -9,41 +9,26 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: import certs
+      uses: apple-actions/import-codesign-certs@v2
+      with:
+        p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
+        p12-password: ${{ secrets.CERTIFICATES_PASSWORD }}
+
     - name: "Setup Signing"
       # These are env vars so they get referenced instead of included
       env:
-        DEV_CERTIFICATES_FILE_BASE64: ${{ secrets.DEV_CERTIFICATES_FILE_BASE64 }}
         DEV_PROVISIONING_PROFILE_BASE64: ${{ secrets.DEV_PROVISIONING_PROFILE_BASE64 }}
-        DIST_CERTIFICATES_FILE_BASE64: ${{ secrets.DIST_CERTIFICATES_FILE_BASE64 }}
         DIST_PROVISIONING_PROFILE_BASE64: ${{ secrets.DIST_PROVISIONING_PROFILE_BASE64 }}
       run: |
         KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-        
-        DEV_CERTIFICATE_PATH=$RUNNER_TEMP/development.p12
         DEV_PROFILE=$RUNNER_TEMP/development.mobileprovision
-        
-        DIST_CERTIFICATE_PATH=$RUNNER_TEMP/distribution.p12
         DIST_PROFILE=$RUNNER_TEMP/distribution.mobileprovision
         
         
-        # import certificate and provisioning profile from secrets
-        echo -n "$DEV_CERTIFICATES_FILE_BASE64" | base64 --decode -o $DEV_CERTIFICATE_PATH
+        # import provisioning profiles from secrets
         echo -n "$DEV_PROVISIONING_PROFILE_BASE64" | base64 --decode -o $DEV_PROFILE
-        
-        echo -n "$DIST_CERTIFICATES_FILE_BASE64" | base64 --decode -o $DIST_CERTIFICATE_PATH
         echo -n "$DIST_PROVISIONING_PROFILE_BASE64" | base64 --decode -o $DIST_PROFILE
-        
-        
-        # create temporary keychain
-        security create-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" $KEYCHAIN_PATH
-        security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-        security unlock-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" $KEYCHAIN_PATH
-        
-        
-        # import certificates to keychain
-        security import $DEV_CERTIFICATE_PATH -P "${{ secrets.DEV_CERTIFICATES_PASSWORD }}" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-        security import $DIST_CERTIFICATE_PATH -P "${{ secrets.DIST_CERTIFICATES_PASSWORD }}" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-        security list-keychain -d user -s $KEYCHAIN_PATH
         
         
         # apply provisioning profile
