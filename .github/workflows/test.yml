@@ -101,7 +101,7 @@ jobs:
       env:
         SCHEME: Example-iOS
       with:
-        app-path: ${{ env.RUNNER_TEMP }}/Build/Archives/${{ env.SCHEME }}.xcarchive/${{ env.SCHEME }}.ipa"
+        app-path: ${{ vars.RUNNER_TEMP }}/Build/Archives/${{ env.SCHEME }}.xcarchive/${{ env.SCHEME }}.ipa
         issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
         api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
         api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
