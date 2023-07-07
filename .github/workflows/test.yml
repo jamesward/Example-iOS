@@ -25,12 +25,13 @@ jobs:
 
     - name: build archive
       env:
-          WORKSPACE: Example-iOS.xcworkspace
-          SCHEME: Example-iOS
-          CONFIGURATION: Release
-          SDK: iphoneos
+        PROJECT_DIR: Example-iOS
+        WORKSPACE: Example-iOS.xcworkspace
+        SCHEME: Example-iOS
+        CONFIGURATION: Release
+        SDK: iphoneos
       run: |
-        cd Example-iOS
+        cd ${PROJECT_DIR}
         if [ "${{ github.ref_type }}" = "tag" ]; then
           agvtool new-marketing-version ${GITHUB_REF_NAME#v}
         fi
@@ -100,7 +101,7 @@ jobs:
       env:
         SCHEME: Example-iOS
       with:
-        app-path: ${RUNNER_TEMP}/Build/Archives/${SCHEME}.xcarchive/${SCHEME}.ipa"
+        app-path: ${{ env.RUNNER_TEMP }}/Build/Archives/${{ env.SCHEME }}.xcarchive/${{ env.SCHEME }}.ipa"
         issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
         api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
         api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
