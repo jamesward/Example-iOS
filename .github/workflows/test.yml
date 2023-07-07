@@ -27,11 +27,11 @@ jobs:
         
         
         # import certificate and provisioning profile from secrets
-        echo -n "${DEV_CERTIFICATES_FILE_BASE64}" | base64 --decode -o $DEV_CERTIFICATE_PATH
-        echo -n "${DEV_PROVISIONING_PROFILE_BASE64}" | base64 --decode -o $DEV_PROFILE
+        echo -n "$DEV_CERTIFICATES_FILE_BASE64" | base64 --decode -o $DEV_CERTIFICATE_PATH
+        echo -n "$DEV_PROVISIONING_PROFILE_BASE64" | base64 --decode -o $DEV_PROFILE
         
-        echo -n "${DIST_CERTIFICATES_FILE_BASE64}" | base64 --decode -o $DIST_CERTIFICATE_PATH
-        echo -n "${DIST_PROVISIONING_PROFILE_BASE64}" | base64 --decode -o $DIST_PROFILE
+        echo -n "$DIST_CERTIFICATES_FILE_BASE64" | base64 --decode -o $DIST_CERTIFICATE_PATH
+        echo -n "$DIST_PROVISIONING_PROFILE_BASE64" | base64 --decode -o $DIST_PROFILE
         
         
         # create temporary keychain
@@ -43,6 +43,7 @@ jobs:
         # import certificates to keychain
         security import $DEV_CERTIFICATE_PATH -P "${{ secrets.DEV_CERTIFICATES_PASSWORD }}" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
         security import $DIST_CERTIFICATE_PATH -P "${{ secrets.DIST_CERTIFICATES_PASSWORD }}" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+        security list-keychain -d user -s $KEYCHAIN_PATH
         
         
         # apply provisioning profile
