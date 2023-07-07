@@ -10,6 +10,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: "Setup Signing"
+      # These are env vars so they get referenced instead of included
       env:
         DEV_CERTIFICATES_FILE_BASE64: ${{ secrets.DEV_CERTIFICATES_FILE_BASE64 }}
         DEV_PROVISIONING_PROFILE_BASE64: ${{ secrets.DEV_PROVISIONING_PROFILE_BASE64 }}
@@ -46,8 +47,8 @@ jobs:
         
         # apply provisioning profile
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-        cp $DEV_CERTIFICATE_PATH ~/Library/MobileDevice/Provisioning\ Profiles
-        cp $DIST_CERTIFICATE_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+        cp $DEV_PROFILE ~/Library/MobileDevice/Provisioning\ Profiles
+        cp $DIST_PROFILE ~/Library/MobileDevice/Provisioning\ Profiles
 
     - name: "Generate ExportOptions.plist"
       run: |
