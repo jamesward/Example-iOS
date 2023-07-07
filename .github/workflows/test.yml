@@ -30,11 +30,13 @@ jobs:
           CONFIGURATION: Release
           SDK: iphoneos
       run: |
+        cd ${WORKSPACE}
         if [ "${{ github.ref_type }}" = "tag" ]; then
           agvtool new-marketing-version ${GITHUB_REF_NAME#v}
         fi
           
         xcrun agvtool new-version -all ${GITHUB_RUN_NUMBER}
+        cd ..
         
         xcrun xcodebuild \
           -workspace "${WORKSPACE}" \
