@@ -11,7 +11,6 @@ An example of how to use Apple development GitHub Actions
 1. Store Key ID in GitHub Secret: `APPSTORE_KEY_ID`
 1. Store Private Key in GitHub Secret: `APPSTORE_PRIVATE_KEY`
 
-
 1. Generate a Private Key for signing:
     `openssl genrsa -out mykey.key 2048`
 1. Generate a Certificate Signing Request:
@@ -55,3 +54,5 @@ An example of how to use Apple development GitHub Actions
 1. Convert the provisioning profile to Base64:
    `base64 YOUR_PROFILE.mobileprovision > YOUR_PROFILE.mobileprovision.txt`
 1. Store the Base64 provisioning profile in GitHub Secret: `DIST_PROVISIONING_PROFILE_BASE64`
+
+1. Store something in the GitHub Secret: `KEYCHAIN_PASSWORD`
