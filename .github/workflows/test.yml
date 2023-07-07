@@ -99,7 +99,7 @@ jobs:
           -exportPath "${RUNNER_TEMP}/Build/Archives/${SCHEME}.xcarchive/${SCHEME}.ipa" \
           PRODUCT_BUNDLE_IDENTIFIER="${{ secrets.BUNDLE_ID }}"
         
-        echo "ipa_path=${RUNNER_TEMP}/Build/Archives/${SCHEME}.xcarchive/${SCHEME}.ipa" >> $GITHUB_OUTPUT
+        echo "ipa_path=${RUNNER_TEMP}/Build/Archives/${SCHEME}.xcarchive/${SCHEME}.ipa/${SCHEME}.ipa" >> $GITHUB_OUTPUT
 
     - uses: Apple-Actions/upload-testflight-build@v1
       with:
